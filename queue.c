@@ -1,65 +1,49 @@
-#include<stdio.h>
-#include<stdlib.h>
-#define MAX_SIZE 5
-typedef struct{
-    int data[MAX_SIZE];
-    int front;
-    int rear;
-}Queue;
-
-void intializeQueue(Queue *q){
-    q->front=-1;q->rear=-1;
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct Node
+{
+    int data;
+    struct Node *next;
+} Node;
+int isEmpty(Node *top)
+{
+    return top == NULL;
 }
-int isEmpty(Queue *q){
-    return q->front == -1||q->front>q->rear;
+void push(struct Node **top, int value)
+{
+    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = *top;
+    *top = newNode;
 }
-int isFull(Queue *q){
-    return q->rear == MAX_SIZE - 1;
-}
-void enqueue(Queue *q,int data){
-    if (isFull(q)){
-        printf("The queue is full");
-        return;
+int pop(struct Node **top)
+{
+    if (*top == NULL)
+    {
+        printf("Stack underflow\n");
+        return -1;
     }
-    if(isEmpty(q)){
-        q->front=0;
-    }
-    q->rear++;
-    q->data[q->rear]=data;
-}
-
-int dequeue(Queue *q){
-    if(isEmpty(q)){
-        printf("The queue is empty");
-        return;
-    }
-    int value=(q->data[q->front++]);
-    if(q->front>q->rear){
-        q->front=q->rear=-1;
-    }
-    printf("Dequed %d\n",value);
-    return value;
+    int popped = (*top)->data;
+    struct Node *temp = *top;
+    *top = (*top)->next;
+    free(temp);
+    return popped;
 }
 
-void display(Queue *q){
-    if(isEmpty(q)){
-        printf("Queue is Empty.\n");
-        return;
-    }
-    printf("Queue elements: ");
-    for(int i=q->front;i<q->rear;i++){
-        printf("%d\n",q->data[i]);
-    }
+int main()
+{
+    Node *top = NULL;
+    push(&top, 10);
+    push(&top, 20);
+    push(&top, 30);
+    push(&top, 40);
+    push(&top, 50);
+    printf("Stack elements: \n");
+    display(top);
+    printf("Popped element: %d\n", pop(&top));
+    printf("Top element: %d\n", peek(top));
+    printf("Stack elements after pop: ");
+    display(top);
+    return 0;
 }
-int main(){
-    Queue *q;
-    intializeQueue(q);
-    int n,x;
-    printf("1.EnQueue\n2.DeQueue\n3.Display\n4.Exit");
-    scanf("%d",&n);
-    if(n==1){
-        printf("Enter the number to EnQueue");
-        scanf("%d",&x);
-        
-    }
-}
+
